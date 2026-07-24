@@ -1,0 +1,574 @@
+<title>허리 통증 자가진단 · honest.pt</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+  :root {
+    --bg: #f5f3ed; --surface: #fffefb; --surface-2: #efece3;
+    --ink: #23261f; --ink-soft: #5d6157; --ink-faint: #8b8f83;
+    --line: #e2ded3; --line-strong: #d3cec1;
+    --accent: #2e6a5b; --accent-ink: #1f4d41; --accent-soft: #e5efe9; --accent-line: #bcd6cc;
+    --ochre: #a9691f; --ochre-soft: #f4ead9;
+    --warn: #b6402f; --warn-soft: #f7e6e2; --warn-line: #e6b8ae;
+    --shadow: 0 1px 2px rgba(35,38,31,.05), 0 8px 24px -14px rgba(35,38,31,.22);
+    --radius: 16px;
+    --font: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif;
+    --maxw: 30rem;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #14160f; --surface: #1d1f18; --surface-2: #262920;
+      --ink: #edefe6; --ink-soft: #a7ac9d; --ink-faint: #757a6c;
+      --line: #2f3228; --line-strong: #3c4034;
+      --accent: #74b7a3; --accent-ink: #a7d6c8; --accent-soft: #1e2e28; --accent-line: #315044;
+      --ochre: #d29a55; --ochre-soft: #2c2519;
+      --warn: #e0806f; --warn-soft: #33201c; --warn-line: #5a352d;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px -16px rgba(0,0,0,.6);
+    }
+  }
+  :root[data-theme="light"] {
+    --bg: #f5f3ed; --surface: #fffefb; --surface-2: #efece3;
+    --ink: #23261f; --ink-soft: #5d6157; --ink-faint: #8b8f83;
+    --line: #e2ded3; --line-strong: #d3cec1;
+    --accent: #2e6a5b; --accent-ink: #1f4d41; --accent-soft: #e5efe9; --accent-line: #bcd6cc;
+    --ochre: #a9691f; --ochre-soft: #f4ead9;
+    --warn: #b6402f; --warn-soft: #f7e6e2; --warn-line: #e6b8ae;
+    --shadow: 0 1px 2px rgba(35,38,31,.05), 0 8px 24px -14px rgba(35,38,31,.22);
+  }
+  :root[data-theme="dark"] {
+    --bg: #14160f; --surface: #1d1f18; --surface-2: #262920;
+    --ink: #edefe6; --ink-soft: #a7ac9d; --ink-faint: #757a6c;
+    --line: #2f3228; --line-strong: #3c4034;
+    --accent: #74b7a3; --accent-ink: #a7d6c8; --accent-soft: #1e2e28; --accent-line: #315044;
+    --ochre: #d29a55; --ochre-soft: #2c2519;
+    --warn: #e0806f; --warn-soft: #33201c; --warn-line: #5a352d;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px -16px rgba(0,0,0,.6);
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: var(--font); line-height: 1.6;
+    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+    font-feature-settings: "tnum";
+  }
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 18px 18px 64px; }
+  .tnum { font-variant-numeric: tabular-nums; }
+
+  /* ---- top bar ---- */
+  .top { display: flex; align-items: center; justify-content: space-between; padding: 6px 2px 4px; }
+  .brand { display: flex; align-items: center; gap: 9px; font-weight: 800; letter-spacing: -.01em; }
+  .brand .dot { width: 26px; height: 26px; border-radius: 8px; background: var(--accent); color: #fff; display: grid; place-items: center; font-size: 14px; }
+  :root[data-theme="dark"] .brand .dot, @media (prefers-color-scheme: dark) { }
+  .brand small { display: block; font-size: 11px; font-weight: 600; color: var(--ink-faint); letter-spacing: .02em; margin-top: -2px; }
+  .theme-btn { background: var(--surface); border: 1px solid var(--line); color: var(--ink-soft); width: 34px; height: 34px; border-radius: 9px; cursor: pointer; font-size: 15px; }
+  .theme-btn:hover { border-color: var(--line-strong); }
+
+  /* ---- spine progress ---- */
+  .spine { display: flex; align-items: center; gap: 5px; margin: 16px 2px 4px; height: 16px; }
+  .vert { flex: 1; height: 7px; border-radius: 3px; background: var(--surface-2); border: 1px solid var(--line); transition: background .35s, border-color .35s; }
+  .vert.on { background: var(--accent); border-color: var(--accent); }
+  .vert.cur { box-shadow: 0 0 0 3px var(--accent-soft); }
+  .step-label { font-size: 11px; color: var(--ink-faint); font-weight: 700; letter-spacing: .08em; margin: 8px 2px 0; text-transform: uppercase; }
+
+  /* ---- card / panels ---- */
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 22px 20px; margin-top: 14px; }
+  .panel { animation: pop .34s cubic-bezier(.2,.7,.2,1) both; }
+  @keyframes pop { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .panel { animation: none; } .vert { transition: none; } }
+
+  .eyebrow { font-size: 12px; font-weight: 800; letter-spacing: .12em; color: var(--accent); text-transform: uppercase; }
+  h1 { font-size: clamp(25px, 7.2vw, 31px); line-height: 1.22; letter-spacing: -.02em; font-weight: 800; margin: 12px 0 10px; text-wrap: balance; }
+  h2 { font-size: 21px; line-height: 1.32; letter-spacing: -.015em; font-weight: 800; margin: 4px 0 14px; text-wrap: balance; }
+  p { margin: 0 0 12px; color: var(--ink-soft); }
+  p.lead { color: var(--ink); font-size: 16px; }
+  .q-num { font-size: 12.5px; font-weight: 800; color: var(--ink-faint); letter-spacing: .04em; }
+  .q-text { font-size: 20px; font-weight: 800; letter-spacing: -.015em; line-height: 1.35; margin: 6px 0 16px; text-wrap: balance; }
+
+  /* ---- options ---- */
+  .opts { display: flex; flex-direction: column; gap: 10px; }
+  .opt {
+    display: flex; align-items: center; gap: 12px; width: 100%; text-align: left;
+    background: var(--surface); border: 1.5px solid var(--line); border-radius: 13px;
+    padding: 15px 15px; font: inherit; color: var(--ink); cursor: pointer;
+    transition: border-color .16s, background .16s, transform .06s;
+  }
+  .opt:hover { border-color: var(--accent-line); background: var(--accent-soft); }
+  .opt:active { transform: scale(.99); }
+  .opt.sel { border-color: var(--accent); background: var(--accent-soft); }
+  .opt .tick { flex: none; width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--line-strong); display: grid; place-items: center; transition: .16s; }
+  .opt.sel .tick { border-color: var(--accent); background: var(--accent); }
+  .opt .tick svg { width: 12px; height: 12px; opacity: 0; transition: opacity .16s; }
+  .opt.sel .tick svg { opacity: 1; }
+  .opt .lab { font-size: 15.5px; font-weight: 600; letter-spacing: -.01em; line-height: 1.4; }
+  .opt.check .tick { border-radius: 7px; }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    background: var(--accent); color: #fff; border: none; border-radius: 12px;
+    padding: 15px 20px; font: inherit; font-weight: 800; font-size: 16px; letter-spacing: -.01em;
+    cursor: pointer; width: 100%; transition: filter .15s, transform .06s;
+  }
+  :root[data-theme="dark"] .btn, .btn { color: #0e130f; }
+  @media (prefers-color-scheme: dark) { .btn { color: #0e130f; } }
+  :root[data-theme="light"] .btn { color: #fff; }
+  .btn:hover { filter: brightness(1.05); }
+  .btn:active { transform: translateY(1px); }
+  .btn[disabled] { opacity: .4; cursor: not-allowed; filter: none; }
+  .btn.ghost { background: transparent; color: var(--ink-soft); border: 1.5px solid var(--line); font-weight: 700; }
+  .btn.ghost:hover { border-color: var(--line-strong); filter: none; }
+  .row { display: flex; gap: 10px; margin-top: 18px; align-items: center; }
+  .row .btn { width: auto; }
+  .row .back { flex: none; }
+  .row .next { flex: 1; }
+
+  .meta { font-size: 12.5px; color: var(--ink-faint); }
+  .center { text-align: center; }
+  a { color: var(--accent-ink); }
+
+  /* ---- intro chips ---- */
+  .quotes { display: flex; flex-direction: column; gap: 8px; margin: 4px 0 18px; }
+  .quote { background: var(--surface-2); border-radius: 11px; padding: 11px 13px; font-size: 13.5px; color: var(--ink-soft); border-left: 3px solid var(--line-strong); }
+  .quote b { color: var(--ink); font-weight: 700; }
+
+  /* ---- red flag ---- */
+  .flag { border-color: var(--warn-line); background: var(--warn-soft); }
+  .flag .eyebrow, .flag h2 { color: var(--warn); }
+  .flag .btn { background: var(--warn); }
+
+  /* ---- result ---- */
+  .type-badge { display: inline-flex; align-items: center; gap: 8px; background: var(--accent-soft); color: var(--accent-ink); border: 1px solid var(--accent-line); border-radius: 999px; padding: 6px 13px; font-size: 13px; font-weight: 800; letter-spacing: -.01em; }
+  .vs { display: grid; grid-template-columns: 1fr auto 1fr; gap: 10px; align-items: stretch; margin: 18px 0; }
+  .vs .cell { border-radius: 13px; padding: 14px 13px; }
+  .vs .pain { background: var(--warn-soft); border: 1px solid var(--warn-line); }
+  .vs .cause { background: var(--accent-soft); border: 1px solid var(--accent-line); }
+  .vs .k { font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 5px; }
+  .vs .pain .k { color: var(--warn); }
+  .vs .cause .k { color: var(--accent-ink); }
+  .vs .v { font-size: 15px; font-weight: 800; color: var(--ink); letter-spacing: -.01em; line-height: 1.35; }
+  .vs .arrow { align-self: center; color: var(--ink-faint); font-size: 20px; font-weight: 800; }
+  .why { font-size: 15.5px; color: var(--ink); }
+  .why b { color: var(--accent-ink); font-weight: 800; background: linear-gradient(transparent 62%, var(--accent-soft) 62%); padding: 0 1px; }
+
+  .cue { background: var(--ochre-soft); border: 1px solid color-mix(in srgb, var(--ochre) 30%, transparent); border-radius: 13px; padding: 15px 16px; margin: 16px 0; }
+  .cue .tag { font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--ochre); }
+  .cue h3 { margin: 6px 0 8px; font-size: 16px; letter-spacing: -.01em; }
+  .cue p { font-size: 14px; margin-bottom: 6px; color: var(--ink-soft); }
+  .cue .stop { font-size: 12.5px; color: var(--ink-faint); margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--line-strong); }
+
+  .slogan { text-align: center; font-weight: 800; color: var(--accent); letter-spacing: -.01em; margin: 18px 0 4px; font-size: 15px; }
+
+  /* ---- email gate ---- */
+  .gate { margin-top: 14px; }
+  .field { display: flex; flex-direction: column; gap: 9px; margin: 14px 0 10px; }
+  .field input { font: inherit; font-size: 16px; padding: 14px 15px; border-radius: 12px; border: 1.5px solid var(--line-strong); background: var(--surface); color: var(--ink); }
+  .field input:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+  .consent { display: flex; gap: 9px; align-items: flex-start; font-size: 12.5px; color: var(--ink-faint); }
+  .consent input { margin-top: 2px; accent-color: var(--accent); width: 16px; height: 16px; flex: none; }
+
+  .paidbridge { margin-top: 16px; border: 1.5px dashed var(--accent-line); border-radius: 14px; padding: 16px; background: var(--surface); }
+  .paidbridge .k { font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+  .paidbridge h3 { margin: 6px 0 6px; font-size: 17px; letter-spacing: -.015em; }
+  .paidbridge p { font-size: 13.5px; margin-bottom: 12px; }
+
+  .safety { margin-top: 22px; font-size: 12px; color: var(--ink-faint); line-height: 1.55; border-top: 1px solid var(--line); padding-top: 14px; }
+  .proto { margin-top: 14px; text-align: center; font-size: 11px; color: var(--ink-faint); }
+
+  .err { color: var(--warn); font-size: 13px; font-weight: 600; margin: 10px 0 0; }
+  #lead { margin: 0; }
+  .hide { display: none !important; }
+</style>
+
+<div class="wrap">
+  <div class="top">
+    <div class="brand">
+      <span class="dot">🩺</span>
+      <span>honest.pt<small>정직한 물리치료사 · 13년차</small></span>
+    </div>
+    <button class="theme-btn" id="theme" aria-label="테마 전환">◐</button>
+  </div>
+
+  <div id="spine-box" class="hide">
+    <div class="spine" id="spine" aria-hidden="true"></div>
+    <div class="step-label" id="steplab">STEP</div>
+  </div>
+
+  <div id="stage" aria-live="polite"></div>
+
+  <div class="safety" id="safety">
+    이건 의료 진단이 아니라 <b>자기 관찰</b>용이야. 통증이 심하거나, 다리 저림·힘빠짐·대소변 문제·야간통증 같은 신호가 있으면 툴 말고 <b>병원·전문의</b> 먼저.
+  </div>
+  <div class="proto">⚙️ 프로토타입 — 진단 로직·문구는 검수용 1차 draft (실제 이메일 수집은 폼 연동 전)</div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  // ═══════════ 이메일 실연동 설정 (여기만 채우면 됨) ═══════════
+  // Web3Forms 무료 액세스 키를 넣으면 → 제출 시 실제 이메일이 수집돼(당신 메일로 옴 + 대시보드에서 자동응답 켜면 1주차 자동발송).
+  //  1) https://web3forms.com 접속 → 받을 이메일만 입력 → 무료 access key 발급(1분, 카드 없음)
+  //  2) 아래 따옴표 안에 붙여넣기
+  //  3) 이 파일을 '일반 웹호스트'에 업로드(예: Netlify Drop / 네이버 modoo·자기 도메인 / Cloudflare Pages)
+  // ⚠️ 키가 비어 있으면 '데모 모드'(실제 전송 없이 화면만). claude.ai 아티팩트(샌드박스)에선 외부전송 차단이라 항상 데모야.
+  var W3F_KEY = "7740d704-783e-44dd-b1dd-a9ff1fc33c47"; // Web3Forms access key (공개용)
+  var LIST_NAME = "honest.pt 허리 자가진단";
+  // ════════════════════════════════════════════════════════
+
+  function scrollTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+  var root = document.documentElement;
+  var themeBtn = document.getElementById('theme');
+  themeBtn.addEventListener('click', function () {
+    var cur = root.getAttribute('data-theme');
+    var next = cur === 'dark' ? 'light' : (cur === 'light' ? 'dark' : (matchMedia('(prefers-color-scheme: dark)').matches ? 'light' : 'dark'));
+    root.setAttribute('data-theme', next);
+  });
+
+  var stage = document.getElementById('stage');
+  var spineBox = document.getElementById('spine-box');
+  var spine = document.getElementById('spine');
+  var steplab = document.getElementById('steplab');
+
+  // ---------- content ----------
+  var RED_FLAGS = [
+    "다리로 찌릿하게 뻗치는 저림·전기 느낌이 있어",
+    "발목·발가락에 힘이 빠지거나 감각이 둔해",
+    "대소변 조절이 예전 같지 않아",
+    "밤에 통증 때문에 깨 / 누워도 안 가라앉아",
+    "최근 넘어짐·사고 뒤부터 아프기 시작했어",
+    "이유 없이 살이 빠지고 있어"
+  ];
+
+  // each option adds points to A(굴곡/디스크) B(신전/swayback) C(불안정/둔근)
+  var QS = [
+    { q: "허리가 제일 아픈 순간은 언제야?", o: [
+      { t: "오래 앉아 있을 때 / 앞으로 숙일 때", s: { A: 2 } },
+      { t: "서 있거나 오래 걸을 때 / 뒤로 젖힐 때", s: { B: 2 } },
+      { t: "앉았다 일어나거나 자세 바꾸는 그 순간", s: { C: 2 } }
+    ]},
+    { q: "허리를 앞으로 숙이면 어때?", o: [
+      { t: "더 아프거나 뻐근해", s: { A: 2 } },
+      { t: "오히려 좀 편해져", s: { B: 2 } },
+      { t: "별 차이 없어", s: { C: 1 } }
+    ]},
+    { q: "아침에 막 일어났을 때 허리는?", o: [
+      { t: "뻣뻣하게 굳어서 한참 움직여야 풀려", s: { A: 1 } },
+      { t: "아침엔 괜찮은데 오래 서 있으면 심해져", s: { B: 1 } },
+      { t: "특정 자세에서만 갑자기 찌릿해", s: { C: 1 } }
+    ]},
+    { q: "통증 위치는 어느 쪽이야?", o: [
+      { t: "주로 한쪽만 / 좌우 번갈아", s: { C: 2 } },
+      { t: "허리 가운데나 양쪽이 골고루", s: { A: 1, B: 1 } }
+    ]},
+    { q: "오래 서 있으면 나도 모르게 짝다리 짚거나\n한쪽 골반이 처지는 편이야?", o: [
+      { t: "응, 그런 편이야", s: { C: 2 } },
+      { t: "아니, 잘 모르겠어", s: { B: 1 } }
+    ]},
+    { q: "하루에 앉아 있는 시간은?", o: [
+      { t: "6시간 이상 (책상·운전 많아)", s: { A: 1 } },
+      { t: "그보다는 적어", s: { B: 1 } }
+    ]}
+  ];
+
+  var TYPES = {
+    A: {
+      badge: "굴곡 민감형",
+      title: "앉으면 아픈 허리 — 범인은 허리가 아니라 '고관절'일 때가 많아",
+      pain: "허리 (요추가 앞으로 눌림)",
+      cause: "안 굽혀지는 고관절",
+      why: "앉거나 숙일 때 <b>고관절이 제대로 안 굽혀지면, 그 몫을 허리가 대신 굽으면서</b> 디스크 앞쪽이 계속 눌려. 오래 앉아 배 근육 타이밍까지 무너지면 허리 혼자 다 떠맡는 거야. 그래서 허리만 지지거나 스트레칭해도 다음 날 또 같은 자리가 아파.",
+      cue: {
+        name: "고관절 힌지 — 허리 대신 고관절을 굽히는 법",
+        steps: "벽에서 한 발 앞에 서서, 무릎은 살짝만 굽힌 채 엉덩이를 뒤 벽으로 '툭' 밀어. 허리는 곧게 둔 채 접히는 건 고관절이어야 해. 허벅지 뒤(햄스트링)가 당기는 느낌이 오면 맞게 가는 거야.",
+        stop: "허리가 먼저 꺾이거나 통증·저림이 커지면 범위를 줄이고 멈춰. 하루 천천히 8번, 한 세트면 충분."
+      }
+    },
+    B: {
+      badge: "신전 민감형",
+      title: "서 있으면 아픈 허리 — 범인은 '약한 배 + 앞으로 쏟아진 골반'",
+      pain: "허리 뒤 (후관절이 눌림)",
+      cause: "안 잡아주는 복부",
+      why: "숙이면 편한데 서 있거나 젖히면 아픈 건, <b>배 근육이 골반을 안 잡아줘서 골반이 앞으로 쏟아지고 허리가 활처럼 꺾인 상태</b>야. 그 무게를 요방형근이 혼자 버티느라 뻐근한 거고. 허리를 더 펴려고 힘줄수록 오히려 심해져.",
+      cue: {
+        name: "복부 브레이싱 — 허리 대신 배가 버티게",
+        steps: "바로 누워 무릎 세우고, 숨을 내쉬면서 배를 '살짝 단단하게' 만들어(힘껏 조이는 게 아니라 기침 직전 느낌). 갈비뼈는 바닥 쪽으로 살짝 내려. 허리와 바닥 사이 뜬 공간이 줄어드는 게 느껴지면 맞아.",
+        stop: "숨을 참거나 허리가 더 꺾이면 힘을 빼. 10초씩 5번, 천천히."
+      }
+    },
+    C: {
+      badge: "불안정·둔근형",
+      title: "자세 바꿀 때 찌릿한 허리 — '허리는 죄가 없다'",
+      pain: "한쪽 허리",
+      cause: "일 안 하는 엉덩이 근육",
+      why: "자세 바꾸는 순간 찌릿하고 한쪽만 아픈 건, <b>엉덩이 근육(중둔근)이 제때 안 켜져서 허리가 그 일을 대신 떠맡고 있어서</b>야. 짝다리·한쪽 골반 처짐도 같은 신호. 그래서 아픈 허리만 풀면 잠깐 편했다가 또 도져 — 정작 쉬고 있는 건 엉덩이거든.",
+      cue: {
+        name: "조개 운동 — 잠든 중둔근 깨우기",
+        steps: "옆으로 누워 무릎을 90도 굽히고 발뒤꿈치는 붙인 채, 위쪽 무릎만 천장으로 천천히 열어(조개가 열리듯). 골반이 뒤로 같이 넘어가지 않게 고정하고, 엉덩이 바깥·중간에 힘이 들어오는 걸 느껴.",
+        stop: "허리에 힘이 들어오거나 골반이 돌아가면 범위를 줄여. 양쪽 12번씩, 느낌 확인이 먼저야."
+      }
+    }
+  };
+
+  // ---------- state ----------
+  var state = { screen: 'intro', flags: [], answers: [], type: null };
+  var TOTAL = QS.length;
+
+  function drawSpine(curIdx) {
+    if (curIdx == null) { spineBox.classList.add('hide'); return; }
+    spineBox.classList.remove('hide');
+    var html = '';
+    for (var i = 0; i < TOTAL; i++) {
+      var cls = 'vert' + (i < curIdx ? ' on' : '') + (i === curIdx ? ' on cur' : '');
+      html += '<span class="' + cls + '"></span>';
+    }
+    spine.innerHTML = html;
+    steplab.textContent = '질문 ' + (curIdx + 1) + ' / ' + TOTAL;
+  }
+
+  function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+  function nl(s){ return esc(s).replace(/\n/g,'<br>'); }
+
+  // ---------- screens ----------
+  function render() {
+    var s = state.screen;
+    if (s === 'intro') return intro();
+    if (s === 'flags') return flags();
+    if (s === 'redflag') return redflag();
+    if (typeof s === 'number') return question(s);
+    if (s === 'result') return result();
+    if (s === 'done') return done();
+  }
+
+  function intro() {
+    drawSpine(null);
+    stage.innerHTML =
+      '<div class="card panel">' +
+        '<div class="eyebrow">1분 허리 자가진단</div>' +
+        '<h1>네 허리, 진짜 문제는<br>허리가 아닐 수 있어.</h1>' +
+        '<p class="lead">같은 허리 통증도 <b>왜 아픈지</b>가 사람마다 달라. 아픈 곳만 풀면 그때뿐인 이유가 거기 있어.</p>' +
+        '<div class="quotes">' +
+          '<div class="quote">"골반교정에 <b>수천만 원</b> 썼는데 결국 발·엉덩이 문제였다"</div>' +
+          '<div class="quote">"병원 다닌 돈만 수백만 원인데 <b>원인을 아직도 모르겠어요</b>"</div>' +
+        '</div>' +
+        '<p class="meta">6개 질문이면 네가 어떤 유형인지, 진짜 원인이 어디인지 짚어줄게. 진단이 아니라 <b>관찰</b>이야.</p>' +
+        '<div class="row"><button class="btn next" id="go">시작하기 →</button></div>' +
+      '</div>';
+    document.getElementById('go').onclick = function () { state.screen = 'flags'; render(); };
+  }
+
+  function flags() {
+    drawSpine(null);
+    var items = RED_FLAGS.map(function (t, i) {
+      var sel = state.flags.indexOf(i) >= 0;
+      return '<button class="opt check' + (sel ? ' sel' : '') + '" data-i="' + i + '">' +
+        '<span class="tick"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2l2.6 2.6L10 3" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>' +
+        '<span class="lab">' + esc(t) + '</span></button>';
+    }).join('');
+    stage.innerHTML =
+      '<div class="card panel">' +
+        '<div class="eyebrow">먼저, 안전 확인</div>' +
+        '<div class="q-text" style="margin-top:10px">아래 중에 <u>지금 겪고 있는 것</u>이 있어?<br>해당되는 걸 다 눌러줘.</div>' +
+        '<div class="opts">' + items +
+          '<button class="opt' + (state.flags.length === 0 && state._flagsSeen ? ' sel' : '') + '" id="none">' +
+          '<span class="tick"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2l2.6 2.6L10 3" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>' +
+          '<span class="lab">해당되는 게 하나도 없어</span></button>' +
+        '</div>' +
+        '<div class="row"><button class="btn ghost back" id="back">← 뒤로</button><button class="btn next" id="next">다음 →</button></div>' +
+      '</div>';
+    stage.querySelectorAll('.opt.check').forEach(function (b) {
+      b.onclick = function () {
+        var i = +b.dataset.i, p = state.flags.indexOf(i);
+        if (p >= 0) state.flags.splice(p, 1); else state.flags.push(i);
+        b.classList.toggle('sel');
+        document.getElementById('none').classList.remove('sel');
+      };
+    });
+    document.getElementById('none').onclick = function () { state.flags = []; state._flagsSeen = true; nextFromFlags(); };
+    document.getElementById('back').onclick = function () { state.screen = 'intro'; render(); };
+    document.getElementById('next').onclick = nextFromFlags;
+  }
+  function nextFromFlags() {
+    if (state.flags.length > 0) { state.screen = 'redflag'; render(); }
+    else { state.answers = []; state.screen = 0; render(); }
+  }
+
+  function redflag() {
+    drawSpine(null);
+    stage.innerHTML =
+      '<div class="card panel flag">' +
+        '<div class="eyebrow">잠깐 — 이건 자가진단 대상이 아니야</div>' +
+        '<h2>네가 체크한 신호는 집에서 판단할 게 아니야.</h2>' +
+        '<p>다리로 뻗치는 저림·힘빠짐, 대소변 변화, 밤에 깨는 통증, 외상 뒤 통증 같은 건 신경·구조 문제일 수 있어서 <b>병원·전문의가 먼저</b> 봐야 해. 여기서 운동부터 시키는 게 오히려 위험할 수 있어.</p>' +
+        '<p class="meta">정형외과·신경외과 진료를 먼저 받아줘. 검사 결과 큰 문제 없다고 나오면, 그때 유형별 관리로 다시 찾아와.</p>' +
+        '<div class="slogan">일상이 치료야 — 근데 순서가 있어.</div>' +
+        '<div class="row"><button class="btn ghost next" id="back">← 다시 확인할게</button></div>' +
+      '</div>';
+    document.getElementById('back').onclick = function () { state.screen = 'flags'; render(); };
+  }
+
+  function question(idx) {
+    drawSpine(idx);
+    var Q = QS[idx];
+    var chosen = state.answers[idx];
+    var opts = Q.o.map(function (o, i) {
+      var sel = chosen === i;
+      return '<button class="opt' + (sel ? ' sel' : '') + '" data-i="' + i + '">' +
+        '<span class="tick"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2l2.6 2.6L10 3" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>' +
+        '<span class="lab">' + nl(o.t) + '</span></button>';
+    }).join('');
+    stage.innerHTML =
+      '<div class="card panel">' +
+        '<div class="q-num tnum">Q' + (idx + 1) + '.</div>' +
+        '<div class="q-text">' + nl(Q.q) + '</div>' +
+        '<div class="opts">' + opts + '</div>' +
+        '<div class="row">' +
+          '<button class="btn ghost back" id="back">← 뒤로</button>' +
+          '<button class="btn next" id="next"' + (chosen == null ? ' disabled' : '') + '>' + (idx === TOTAL - 1 ? '결과 보기 →' : '다음 →') + '</button>' +
+        '</div>' +
+      '</div>';
+    stage.querySelectorAll('.opt').forEach(function (b) {
+      b.onclick = function () {
+        state.answers[idx] = +b.dataset.i;
+        stage.querySelectorAll('.opt').forEach(function (x) { x.classList.remove('sel'); });
+        b.classList.add('sel');
+        var nx = document.getElementById('next'); nx.disabled = false;
+        setTimeout(advance, 230);
+      };
+    });
+    function advance() {
+      if (state.answers[idx] == null) return;
+      if (idx === TOTAL - 1) { score(); state.screen = 'result'; }
+      else state.screen = idx + 1;
+      render();
+    }
+    document.getElementById('next').onclick = advance;
+    document.getElementById('back').onclick = function () {
+      state.screen = idx === 0 ? 'flags' : idx - 1; render();
+    };
+  }
+
+  function score() {
+    var tot = { A: 0, B: 0, C: 0 };
+    state.answers.forEach(function (ai, qi) {
+      var s = QS[qi].o[ai].s;
+      for (var k in s) tot[k] += s[k];
+    });
+    var order = ['C', 'A', 'B']; // tie-break priority: 둔근형 우선(가장 흔한 놓침), 그다음 굴곡
+    var best = order[0];
+    order.forEach(function (k) { if (tot[k] > tot[best]) best = k; });
+    state.type = best; state.scores = tot;
+  }
+
+  function result() {
+    drawSpine(null);
+    var T = TYPES[state.type];
+    stage.innerHTML =
+      '<div class="card panel">' +
+        '<span class="type-badge">🧭 ' + esc(T.badge) + '</span>' +
+        '<h2 style="margin-top:14px">' + esc(T.title) + '</h2>' +
+        '<div class="vs">' +
+          '<div class="cell pain"><div class="k">아픈 곳</div><div class="v">' + esc(T.pain) + '</div></div>' +
+          '<div class="arrow">→</div>' +
+          '<div class="cell cause"><div class="k">진짜 원인</div><div class="v">' + esc(T.cause) + '</div></div>' +
+        '</div>' +
+        '<p class="why">' + T.why + '</p>' +
+        '<div class="cue">' +
+          '<div class="tag">🎁 무료 큐 · 오늘 하나만</div>' +
+          '<h3>' + esc(T.cue.name) + '</h3>' +
+          '<p>' + esc(T.cue.steps) + '</p>' +
+          '<div class="stop">⚠️ ' + esc(T.cue.stop) + '</div>' +
+        '</div>' +
+        '<div class="slogan">일상이 치료야</div>' +
+      '</div>' +
+      gateHTML();
+    bindGate();
+  }
+
+  function gateHTML() {
+    var T = TYPES[state.type];
+    return '<div class="card panel gate">' +
+      '<div class="eyebrow">전체 맞춤 루틴 받기</div>' +
+      '<h2 style="margin-top:10px">"' + esc(T.badge) + '" 전용 4주 루틴,<br>이메일로 보내줄게.</h2>' +
+      '<p>오늘 큐 하나로는 부족해. 네 유형이 왜 그렇게 됐는지 전체 기전 + 주차별로 뭘 언제 해야 하는지 정리한 걸 보내줄게. <b>스팸 안 보내 — 루틴이랑 몸 얘기만.</b></p>' +
+      '<form id="lead" novalidate>' +
+        '<input type="text" name="botcheck" id="botcheck" class="hide" tabindex="-1" autocomplete="off" aria-hidden="true" />' +
+        '<div class="field">' +
+          '<input id="email" name="email" type="email" inputmode="email" placeholder="이메일 주소" autocomplete="email" required />' +
+          '<label class="consent"><input type="checkbox" id="agree" /><span>루틴·건강 정보 메일 수신에 동의해. 언제든 구독 취소 가능하고, 이건 의료 조언이 아니라 자기 관리용이라는 걸 이해했어.</span></label>' +
+        '</div>' +
+        '<button class="btn" id="send" type="submit" disabled>내 유형 루틴 받기 →</button>' +
+        '<p class="err hide" id="err" role="alert"></p>' +
+      '</form>' +
+      '<p class="meta" style="margin-top:10px">이미 수천 명의 몸을 봐온 물리치료사가 정리한 거야.</p>' +
+    '</div>';
+  }
+
+  function bindGate() {
+    var form = document.getElementById('lead');
+    var email = document.getElementById('email');
+    var agree = document.getElementById('agree');
+    var send = document.getElementById('send');
+    var err = document.getElementById('err');
+    function check() { send.disabled = !(/\S+@\S+\.\S+/.test(email.value) && agree.checked); }
+    email.addEventListener('input', check);
+    agree.addEventListener('change', check);
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (send.disabled) return;
+      if (document.getElementById('botcheck').value) return; // 허니팟(봇 차단)
+      state.email = email.value.trim();
+      err.classList.add('hide');
+      // 데모 모드(키 없음/샌드박스): 실제 전송 없이 완료 화면
+      if (!W3F_KEY) { state.screen = 'done'; render(); scrollTop(); return; }
+      send.disabled = true; send.textContent = '보내는 중…';
+      fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({
+          access_key: W3F_KEY,
+          subject: '[허리 자가진단] ' + TYPES[state.type].badge + ' — 루틴 신청',
+          from_name: LIST_NAME,
+          email: state.email,
+          '유형': TYPES[state.type].badge,
+          '유형코드': state.type,
+          '출처': 'honest.pt 허리 자가진단툴'
+        })
+      }).then(function (r) { return r.json(); }).then(function (d) {
+        if (d && d.success) { state.screen = 'done'; render(); scrollTop(); }
+        else { throw new Error((d && d.message) || 'fail'); }
+      }).catch(function () {
+        send.disabled = false; send.textContent = '내 유형 루틴 받기 →';
+        err.textContent = '잠깐, 전송이 안 됐어. 네트워크 확인하고 한 번만 더 눌러줄래?';
+        err.classList.remove('hide');
+      });
+    });
+  }
+
+  function done() {
+    drawSpine(null);
+    var T = TYPES[state.type];
+    stage.innerHTML =
+      '<div class="card panel">' +
+        '<div class="eyebrow">✓ 보냈어</div>' +
+        '<h2 style="margin-top:12px">메일함 확인해봐.<br>안 오면 스팸함도 한 번.</h2>' +
+        '<p>"' + esc(T.badge) + '" 4주 루틴을 <b>' + esc(state.email || '') + '</b>로 보냈어. 오늘 배운 큐부터 며칠 해보고, 메일 루틴이랑 같이 가면 돼.</p>' +
+        '<div class="paidbridge">' +
+          '<div class="k">더 깊게 가고 싶으면</div>' +
+          '<h3>"' + esc(T.badge) + '" 4주 교정 프로그램</h3>' +
+          '<p>영상 동작 가이드 + 주차별 체크 + 안 풀릴 때 1:1 질문까지. 지금 준비 중이야 — 관심 등록해두면 열릴 때 먼저, 얼리버드로 알려줄게.</p>' +
+          '<button class="btn ghost" id="waitlist">먼저 알림 받기</button>' +
+        '</div>' +
+        '<div class="slogan" style="margin-top:20px">일상이 치료야</div>' +
+        '<div class="row"><button class="btn ghost next" id="again">← 처음부터 다시</button></div>' +
+      '</div>';
+    document.getElementById('waitlist').onclick = function (e) {
+      e.target.textContent = '✓ 등록됐어 — 먼저 알려줄게'; e.target.disabled = true;
+    };
+    document.getElementById('again').onclick = function () {
+      state = { screen: 'intro', flags: [], answers: [], type: null }; render();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+  }
+
+  render();
+})();
+</script>
