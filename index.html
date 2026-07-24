@@ -665,9 +665,9 @@
     var T = TYPES[state.type];
     stage.innerHTML =
       '<div class="card panel">' +
-        '<div class="eyebrow">✓ 저장했어 — 메일로도 보냈어</div>' +
+        '<div class="eyebrow">✓ 신청 완료</div>' +
         '<h2 style="margin-top:12px">바로 아래가 네 1주차야.</h2>' +
-        '<p><b>' + esc(state.email || '') + '</b>로도 보냈으니 저장해두고 봐. 오늘부터 딱 5분씩, 며칠 해보고 아래 셀프체크로 확인해.</p>' +
+        '<p>스크린샷 하거나 저장해두고, 오늘부터 딱 5분씩 며칠 해봐. 아래 셀프체크로 확인하고. <b>2주차부터는 ' + esc(state.email || '') + '로 보내줄게.</b></p>' +
       '</div>' +
       renderRoutine(state.type) +
       '<div class="card panel">' +
