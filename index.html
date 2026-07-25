@@ -577,20 +577,38 @@
   function gateHTML() {
     var T = TYPES[state.type];
     return '<div class="card panel gate">' +
-      '<div class="eyebrow">전체 맞춤 루틴 받기</div>' +
-      '<h2 style="margin-top:10px">"' + esc(T.badge) + '" 전용 4주 루틴,<br>이메일로 보내줄게.</h2>' +
-      '<p>오늘 큐 하나로는 부족해. 네 유형이 왜 그렇게 됐는지 전체 기전 + 주차별로 뭘 언제 해야 하는지 정리한 걸 보내줄게. <b>스팸 안 보내 — 루틴이랑 몸 얘기만.</b></p>' +
+      '<div class="eyebrow">내 유형 1주차 루틴 받기</div>' +
+      '<h2 style="margin-top:10px">"' + esc(T.badge) + '" 전용 1주차 루틴,<br>바로 보여줄게.</h2>' +
+      '<p>오늘 큐 하나로는 부족해. 네 유형이 왜 그렇게 됐는지랑, 이번 주에 뭘 어떻게 할지 정리한 걸 <b>지금 바로</b> 볼 수 있어. 2주차부터는 순서대로 메일로 보내줄게. <b>스팸 안 보내 — 루틴이랑 몸 얘기만.</b></p>' +
       '<form id="lead" novalidate>' +
         '<input type="text" name="botcheck" id="botcheck" class="hide" tabindex="-1" autocomplete="off" aria-hidden="true" />' +
         '<div class="field">' +
           '<input id="email" name="email" type="email" inputmode="email" placeholder="이메일 주소" autocomplete="email" required />' +
-          '<label class="consent"><input type="checkbox" id="agree" /><span>루틴·건강 정보 메일 수신에 동의해. 언제든 구독 취소 가능하고, 이건 의료 조언이 아니라 자기 관리용이라는 걸 이해했어.</span></label>' +
+          '<label class="consent"><input type="checkbox" id="agree" /><span><b>개인정보 수집·이용</b>(수집 항목: 이메일 / 목적: 루틴·건강 정보 발송 / 구독 취소 시 즉시 파기)에 동의해. 언제든 취소할 수 있고, 이건 의료 조언이 아니라 자기 관리용이라는 걸 이해했어.</span></label>' +
         '</div>' +
         '<button class="btn" id="send" type="submit" disabled>내 유형 루틴 받기 →</button>' +
         '<p class="err hide" id="err" role="alert"></p>' +
       '</form>' +
       '<p class="meta" style="margin-top:10px">이미 수천 명의 몸을 봐온 물리치료사가 정리한 거야.</p>' +
     '</div>';
+  }
+
+  // 스티비 구독 폼의 공개 엔드포인트(비밀키 아님 — 웹페이지 삽입용으로 공개 설계됨).
+  // 전송 규격은 스티비 공식 폼 스크립트와 동일: x-www-form-urlencoded, 키는 input id에서 'stb_' 뗀 것.
+  var STIBEE_EP = 'https://stibee.com/api/v1.0/lists/Ur2L2cjyEaXaKPG_0VXhnRikMuOaEQ==/public/subscribers';
+  var STIBEE_TYPE_KEY = 'type'; // ⚠️ 스티비 [사용자 정의 필드]의 '키'와 반드시 동일해야 저장됨
+
+  function postStibee(addr, typeCode) {
+    if (!STIBEE_EP) return Promise.resolve();
+    var body = 'email=' + encodeURIComponent(addr) +
+               '&' + STIBEE_TYPE_KEY + '=' + encodeURIComponent(typeCode);
+    // no-cors: 응답은 못 읽지만 등록은 정상 처리됨(단순요청이라 preflight 없음). 실패해도 흐름 안 막음.
+    return fetch(STIBEE_EP, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: body
+    }).catch(function () {});
   }
 
   function bindGate() {
@@ -608,6 +626,8 @@
       if (document.getElementById('botcheck').value) return; // 허니팟(봇 차단)
       state.email = email.value.trim();
       err.classList.add('hide');
+      // 스티비 주소록에 등록(주 저장소). 응답 대기 없이 먼저 쏘고 흐름은 계속.
+      postStibee(state.email, state.type);
       // 데모 모드(키 없음/샌드박스): 실제 전송 없이 완료 화면
       if (!W3F_KEY) { state.screen = 'done'; render(); scrollTop(); return; }
       send.disabled = true; send.textContent = '보내는 중…';
