@@ -183,6 +183,27 @@
   .nextwk b { color: var(--ink); }
   .slogan { text-align: center; font-weight: 800; color: var(--accent); letter-spacing: -.01em; margin: 18px 0 4px; font-size: 15px; }
 
+  /* ---- 배송 약속 배너 + 저장 버튼 ---- */
+  .deliver { display: flex; gap: 9px; align-items: flex-start; margin: 14px 0 12px;
+    padding: 11px 13px; border-radius: 10px; background: var(--accent-soft);
+    border: 1px solid var(--accent-line); font-size: 13px; line-height: 1.55; color: var(--ink); }
+  .deliver b { color: var(--accent-ink); }
+  .dv-ic { flex: none; font-size: 15px; line-height: 1.4; }
+  #saveme { width: 100%; }
+
+  /* ---- 인쇄 / PDF 저장: 1주차 루틴만 깔끔하게 ---- */
+  @media print {
+    :root { --bg: #fff; --surface: #fff; --surface-2: #f4f4f0; --ink: #111; --ink-soft: #333; --line: #ccc; }
+    body { background: #fff !important; color: #000; }
+    .topbar, .gate, .paidbridge, .deliver, #saveme, #again, #waitlist,
+    .spine-wrap, canvas, .eyebrow, .meta { display: none !important; }
+    .card, .panel { box-shadow: none !important; border: 1px solid #ddd !important;
+      break-inside: avoid; page-break-inside: avoid; background: #fff !important; }
+    .move { break-inside: avoid; page-break-inside: avoid; }
+    a[href]:after { content: ""; }
+    @page { margin: 14mm; }
+  }
+
   /* ---- email gate ---- */
   .gate { margin-top: 14px; }
   .field { display: flex; flex-direction: column; gap: 9px; margin: 14px 0 10px; }
@@ -579,7 +600,7 @@
     return '<div class="card panel gate">' +
       '<div class="eyebrow">내 유형 1주차 루틴 받기</div>' +
       '<h2 style="margin-top:10px">"' + esc(T.badge) + '" 전용 1주차 루틴,<br>바로 보여줄게.</h2>' +
-      '<p>오늘 큐 하나로는 부족해. 네 유형이 왜 그렇게 됐는지랑, 이번 주에 뭘 어떻게 할지 정리한 걸 <b>지금 바로</b> 볼 수 있어. 2주차부터는 순서대로 메일로 보내줄게. <b>스팸 안 보내 — 루틴이랑 몸 얘기만.</b></p>' +
+      '<p>오늘 큐 하나로는 부족해. 네 유형이 왜 그렇게 됐는지랑, 이번 주에 뭘 어떻게 할지 정리한 걸 <b>지금 바로</b> 볼 수 있어. 2주차부터는 <b>매주 월요일 아침</b>에 한 통씩, 4주차까지. <b>스팸 안 보내 — 루틴이랑 몸 얘기만.</b></p>' +
       '<form id="lead" novalidate>' +
         '<input type="text" name="botcheck" id="botcheck" class="hide" tabindex="-1" autocomplete="off" aria-hidden="true" />' +
         '<div class="field">' +
@@ -687,7 +708,9 @@
       '<div class="card panel">' +
         '<div class="eyebrow">✓ 신청 완료</div>' +
         '<h2 style="margin-top:12px">바로 아래가 네 1주차야.</h2>' +
-        '<p>스크린샷 하거나 저장해두고, 오늘부터 딱 5분씩 며칠 해봐. 아래 셀프체크로 확인하고. <b>2주차부터는 ' + esc(state.email || '') + '로 보내줄게.</b></p>' +
+        '<p><b>1주차는 이 화면이 전부야</b> — 아래 버튼으로 저장해두고 보면 돼. 오늘부터 딱 5분씩, 며칠 해보고 셀프체크로 확인해.</p>' +
+        '<div class="deliver"><span class="dv-ic">📅</span><span><b>2주차부터는 매주 월요일 아침</b>, ' + esc(state.email || '') + '로 한 통씩 보낼게. 4주차까지.</span></div>' +
+        '<button class="btn ghost" id="saveme">📄 1주차 저장 / 인쇄하기</button>' +
       '</div>' +
       renderRoutine(state.type) +
       '<div class="card panel">' +
@@ -699,6 +722,9 @@
         '</div>' +
         '<div class="row"><button class="btn ghost next" id="again">← 처음부터 다시</button></div>' +
       '</div>';
+    document.getElementById('saveme').onclick = function () {
+      window.print(); // 브라우저 인쇄 → 'PDF로 저장' 선택하면 1주차가 파일로 남음
+    };
     document.getElementById('waitlist').onclick = function (e) {
       e.target.textContent = '✓ 등록됐어 — 먼저 알려줄게'; e.target.disabled = true;
     };
